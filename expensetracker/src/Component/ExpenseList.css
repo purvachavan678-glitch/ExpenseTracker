@@ -1,0 +1,11 @@
+.cards{
+      max-width: 400px;
+  margin: 20px auto;
+  padding: 15px;
+  background: #2c3e50;
+  border-radius: 10px;
+}
+
+.h2{
+  color: #f1c40f;
+}

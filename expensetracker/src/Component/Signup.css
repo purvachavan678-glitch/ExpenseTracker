@@ -1,0 +1,94 @@
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f9;
+}
+
+.d-flex {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bg-secondary {
+  background: linear-gradient(135deg, #6c757d, #343a40);
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.bg-white {
+  background-color: #ffffff !important;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 100%;
+  max-width: 450px;
+}
+
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-control {
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px !important;
+  border: 1px solid #ccc;
+  transition: border 0.3s ease-in-out;
+}
+
+.form-control:focus {
+  border-color: #28a745;
+  outline: none;
+  box-shadow: 0 0 6px rgba(40, 167, 69, 0.3);
+}
+
+button.btn-success {
+  background: #28a745;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px !important;
+  transition: background 0.3s ease-in-out;
+}
+
+button.btn-success:hover {
+  background: #218838;
+}
+
+button.btn-light {
+  border: 1px solid #ccc;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px !important;
+  transition: background 0.3s ease-in-out;
+}
+
+button.btn-light:hover {
+  background: #f1f1f1;
+}
+
+.alert {
+  font-size: 14px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding: 15px;
+  background: #343a40;
+  color: #ffffff;
+  font-size: 14px;
+  margin-top: 20px;
+}

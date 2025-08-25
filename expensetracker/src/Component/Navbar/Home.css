@@ -1,0 +1,47 @@
+
+
+/* Navbar container */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2c3e50; /* dark blue */
+  padding: 12px 24px;
+  color: white;
+}
+
+/* Logo */
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #f1c40f; 
+  margin: 0;
+}
+
+/* Links container */
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+/* Each link */
+.nav-link {
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Hover effect */
+.nav-link:hover {
+  background: #f1c40f; /* yellow */
+  color: #2c3e50;      /* dark text */
+}
+
+.icon{
+
+  width:5%;
+ background-color:  #f1c40f;
+}
