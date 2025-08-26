@@ -17,8 +17,9 @@ const Home = () => {
       <div className="nav-links">
         <Link to="/expense" className="nav-link">Expense</Link>
         <Link to="/financialReports" className="nav-link">Financial Reports</Link>
+        {!user ? (
         <Link to ="/signup" className="nav-link">Signup</Link>
-
+       ):('')}
         {user ? (
           <button onClick={handleLogout} className="nav-link">
             Logout
