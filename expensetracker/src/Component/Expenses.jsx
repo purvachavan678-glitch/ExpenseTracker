@@ -4,7 +4,6 @@ import Home from "./Navbar/Home";
 import CategoryCard from "./CategoryCard";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
 const Expenses = () => {
   const [categories] = useState(["Food", "Shopping", "Travels"]);
   const [user, setUser] = useState(null);
@@ -25,37 +24,35 @@ const Expenses = () => {
 
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-
-    if (!loggedInUser) {
+    if (!loggedInUser || !loggedInUser.email) {
       navigate("/login");
       return;
     }
-
     setUser(loggedInUser);
 
-    const saved = localStorage.getItem(`newExpense_${loggedInUser.email}`);
-    if (saved) {
-      try {
-        setExpensesByCategory(JSON.parse(saved));
-      } catch {
-        setExpensesByCategory({
-          Food: [],
-          Shopping: [],
-          Travels: [],
-        });
-      }
-    }
+    fetchExpenses(loggedInUser.email);
   }, [navigate]);
 
-  useEffect(() => {
-    if (user) {
-      console.log(`${user.email}`)
-      console.log(expensesByCategory)
-     
-     }
-  },
-    [expensesByCategory, user]
-  );
+  const fetchExpenses = async (email) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/expenses?email=${email}`
+      );
+      const byCategory = { Food: [], Shopping: [], Travels: [] };
+      res.data.forEach((exp) => {
+        if (byCategory[exp.category]) {
+          byCategory[exp.category].push(exp);
+        }
+      });
+      setExpensesByCategory(byCategory);
+    } catch {
+      setExpensesByCategory({
+        Food: [],
+        Shopping: [],
+        Travels: [],
+      });
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,53 +69,47 @@ const Expenses = () => {
 
     try {
       const res = await axios.post("http://localhost:5000/api/cat", {
-  userEmail: user.email || user, 
-  text: formData.text,
-  category: formData.types,
-  amount: formData.amount,
-});
-
+        userEmail: user.email,
+        text: formData.text,
+        category: formData.types,
+        amount: formData.amount,
+      });
 
       setMessage(res.data.message);
-      console.log("Transaction successful", res.data);
+
+      fetchExpenses(user.email);
+      setFormData({ text: "", types: "", amount: "" });
     } catch (err) {
       setMessage(err.response?.data?.message || "Transaction failed");
       console.error("Transaction error", err);
     }
-
-    const newExpense = {
-      text: formData.text,
-      amount: Number(formData.amount),
-      date: new Date().toLocaleString(),
-    };
-
-    const updatedExpenses = {
-    
-      ...expensesByCategory,
-      [formData.types]: [...expensesByCategory[formData.types], newExpense],
-    };
-
-    setExpensesByCategory(updatedExpenses);
-    setFormData({ text: "", types: "", amount: "" });
   };
 
-  const handleRemoveCategory = (category) => {
-    const updatedExpenses = {
-      ...expensesByCategory,
-      [category]: [],
-    };
-    setExpensesByCategory(updatedExpenses);
-    
+  const handleRemoveCategory = async (category) => {
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/expenses/category`,
+        {
+          data: { email: user.email, category }
+        }
+      );
+      fetchExpenses(user.email);
+    } catch {
+      setMessage("Failed to remove category expenses");
+    }
   };
 
-  const handleRemoveHistory = () => {
-    if (user) {
-      console.log(`${user.email}`)
-      setExpensesByCategory({
-        Food: [],
-        Shopping: [],
-        Travels: [],
-      });
+  const handleRemoveHistory = async () => {
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/expenses/all`,
+        {
+          data: { email: user.email }
+        }
+      );
+      fetchExpenses(user.email);
+    } catch {
+      setMessage("Failed to remove all expenses");
     }
   };
 
@@ -130,7 +121,7 @@ const Expenses = () => {
   return (
     <>
       <Home />
-      {user && <h2>Welcome {user}</h2>}
+      {user && <h2>Welcome {user.name || user.email}</h2>}
 
       {user ? (
         <>

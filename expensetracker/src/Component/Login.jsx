@@ -18,15 +18,18 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    localStorage.setItem("loggedInUser", JSON.stringify(formData.name));
+    localStorage.setItem(
+      "loggedInUser",
+      JSON.stringify({ email: formData.email, name: formData.name })
+    );
 
     localStorage.setItem(`user_${formData.name}`, JSON.stringify(formData));
-navigate("/expense")
+    navigate("/expense");
   };
 
   return (
     <>
-       <Home/>
+      <Home />
       <div className="login-container">
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>
@@ -60,8 +63,6 @@ navigate("/expense")
           <button type="submit">Login</button>
         </form>
       </div>
-
-      
     </>
   );
 };

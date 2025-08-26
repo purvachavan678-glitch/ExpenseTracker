@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./FinancialReports.css";
 import Home from "./Navbar/Home";
+import axios from "axios";
 
 import {
   BarChart,
@@ -21,33 +22,39 @@ export default function FinancialReports() {
 
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    if (!loggedInUser) {
+    if (!loggedInUser || !loggedInUser.email) {
       navigate("/login");
       return;
     }
     setUser(loggedInUser);
 
-    const saved = localStorage.getItem(`newExpense_${loggedInUser.email}`);
-    if (!saved) return;
-
-    try {
-      const parsed = JSON.parse(saved);
-
-      const formatted = Object.keys(parsed).map((category) => {
-        const totalAmount = parsed[category].reduce(
-          (sum, entry) => sum + Number(entry.amount || 0),
-          0
+    const fetchExpenses = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/expenses?email=${loggedInUser.email}`
         );
-        return { category, amount: totalAmount };
-      });
+        const categories = ["Food", "Shopping", "Travels"];
+        const byCategory = { Food: [], Shopping: [], Travels: [] };
+        res.data.forEach((exp) => {
+          if (byCategory[exp.category]) {
+            byCategory[exp.category].push(exp);
+          }
+        });
+        const formatted = categories.map((category) => {
+          const totalAmount = byCategory[category].reduce(
+            (sum, entry) => sum + Number(entry.amount || 0),
+            0
+          );
+          return { category, amount: totalAmount };
+        });
+        setChartData(formatted);
+      } catch (err) {
+        setChartData([]);
+      }
+    };
 
-      setChartData(formatted);
-    } catch (err) {
-      console.error("Error parsing expense data", err);
-    }
+    fetchExpenses();
   }, [navigate]);
-
- 
 
   return (
     <>
@@ -55,7 +62,7 @@ export default function FinancialReports() {
 
       <div className="chart-header">
         <h2 className="chart-title">
-          {user ? `${user}'s Financial Reports` : "Transaction Reports"}
+          {user ? `${user.name || user.email}'s Financial Reports` : "Transaction Reports"}
         </h2>
       </div>
 
@@ -80,7 +87,6 @@ export default function FinancialReports() {
           </BarChart>
         </ResponsiveContainer>
         <br />
-        
       </div>
     </>
   );

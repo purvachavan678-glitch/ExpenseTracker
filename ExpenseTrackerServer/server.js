@@ -5,7 +5,7 @@ const connectDB = require('./config/db');
 
 // Route imports
 const authRoute = require('./routes/authroutes');
-const categoriesRoutes = require('./routes/categoriesRoutes');
+const categoriesRoutes = require("./routes/categoriesRoutes");
 
 dotenv.config();
 
@@ -24,7 +24,7 @@ app.get("/", (req, res) => res.send("API is running"));
 // API Routes
 app.use('/api/auth', authRoute);
 app.use('/api/cat', categoriesRoutes); 
-
+app.use("/api/expenses", categoriesRoutes);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

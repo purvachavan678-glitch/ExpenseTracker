@@ -16,21 +16,23 @@ exports.addExpense = async (req, res) => {
   }
 };
 
-
 exports.getExpensesByUser = async (req, res) => {
   try {
-    const { email } = req.params;
+    const { email } = req.query;
+    if (!email) return res.status(400).json({ message: "Email is required" });
     const expenses = await Expense.find({ userEmail: email });
     res.status(200).json(expenses);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Error fetching expenses", error: err.message });
   }
 };
 
 exports.removeCategory = async (req, res) => {
   try {
-    const { email, category } = req.params;
+    const { email, category } = req.body;
+    if (!email || !category) {
+      return res.status(400).json({ message: "Email and category are required" });
+    }
     const result = await Expense.deleteMany({ userEmail: email, category });
     res.status(200).json({ message: `Removed ${result.deletedCount} ${category} expenses` });
   } catch (err) {
@@ -41,7 +43,10 @@ exports.removeCategory = async (req, res) => {
 
 exports.clearExpenses = async (req, res) => {
   try {
-    const { email } = req.params;
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
     const result = await Expense.deleteMany({ userEmail: email });
     res.status(200).json({ message: `All ${result.deletedCount} expenses cleared for ${email}` });
   } catch (err) {
