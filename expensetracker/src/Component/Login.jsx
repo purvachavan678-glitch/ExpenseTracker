@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "./UserContext";
 import "./L&S.css";
 import Home from "./Navbar/Home";
 
 const Login = () => {
+  const { setUser } = useUser();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,13 +19,7 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    localStorage.setItem(
-      "loggedInUser",
-      JSON.stringify({ email: formData.email, name: formData.name })
-    );
-
-    localStorage.setItem(`user_${formData.name}`, JSON.stringify(formData));
+    setUser({ name: formData.name, email: formData.email });
     navigate("/expense");
   };
 

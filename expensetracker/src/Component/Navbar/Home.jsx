@@ -6,7 +6,6 @@ const Home = () => {
       <nav className="navbar">
         <h2 className="logo">Expense Tracker</h2>
         <div className="nav-links">
-          {/* <Link to="/expense" className="nav-link">Home</Link> */}
           <Link to="/expense" className="nav-link">Expense</Link>
           <Link to="/financialReports" className="nav-link">FinancialReports</Link>
           <Link to="/login" className="nav-link">Login</Link>

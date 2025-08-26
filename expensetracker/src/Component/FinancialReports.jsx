@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "./UserContext";
 import "./FinancialReports.css";
 import Home from "./Navbar/Home";
 import axios from "axios";
-
 import {
   BarChart,
   Bar,
@@ -16,22 +16,20 @@ import {
 } from "recharts";
 
 export default function FinancialReports() {
+  const { user } = useUser();
   const [chartData, setChartData] = useState([]);
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    if (!loggedInUser || !loggedInUser.email) {
+    if (!user || !user.email) {
       navigate("/login");
       return;
     }
-    setUser(loggedInUser);
 
     const fetchExpenses = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/expenses?email=${loggedInUser.email}`
+          `http://localhost:5000/api/expenses?email=${user.email}`
         );
         const categories = ["Food", "Shopping", "Travels"];
         const byCategory = { Food: [], Shopping: [], Travels: [] };
@@ -54,18 +52,16 @@ export default function FinancialReports() {
     };
 
     fetchExpenses();
-  }, [navigate]);
+  }, [user, navigate]);
 
   return (
     <>
       <Home />
-
       <div className="chart-header">
         <h2 className="chart-title">
           {user ? `${user.name || user.email}'s Financial Reports` : "Transaction Reports"}
         </h2>
       </div>
-
       <div className="chart-container">
         <ResponsiveContainer width="80%" height={400}>
           <BarChart

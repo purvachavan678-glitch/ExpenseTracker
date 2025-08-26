@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "./UserContext";
 import "./Expense.css";
 import Home from "./Navbar/Home";
 import CategoryCard from "./CategoryCard";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 const Expenses = () => {
+  const { user } = useUser();
   const [categories] = useState(["Food", "Shopping", "Travels"]);
-  const [user, setUser] = useState(null);
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
     text: "",
@@ -23,15 +25,12 @@ const Expenses = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    if (!loggedInUser || !loggedInUser.email) {
+    if (!user || !user.email) {
       navigate("/login");
       return;
     }
-    setUser(loggedInUser);
-
-    fetchExpenses(loggedInUser.email);
-  }, [navigate]);
+    fetchExpenses(user.email);
+  }, [user, navigate]);
 
   const fetchExpenses = async (email) => {
     try {
@@ -114,7 +113,6 @@ const Expenses = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("loggedInUser");
     navigate("/login");
   };
 
