@@ -112,9 +112,7 @@ const Expenses = () => {
     }
   };
 
-  const handleLogout = () => {
-    navigate("/login");
-  };
+ 
 
   return (
     <>
@@ -171,9 +169,7 @@ const Expenses = () => {
             </button>
             <br />
             <br />
-            <button type="button" onClick={handleLogout}>
-              Logout
-            </button>
+            
             <br />
             {message && <p>{message}</p>}
           </form>
